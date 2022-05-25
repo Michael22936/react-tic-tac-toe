@@ -6,6 +6,14 @@ function Board(){
     const [ square, setSquare ] = useState(Array(9).fill(null));
     const [ X, setX ] = useState(true);
 
+    const winner = calculateWinner(square);
+    let status;
+    if (winner) {
+        status = 'Winner: ' + winner;
+    } else {
+        status = 'Player Turn: ' + (X ? 'X' : 'O');
+    }
+
     const rederSquare = (i) => {
         return(
             <Square value = { square[i] } onClick = { () => handleClick(i) } />
@@ -27,7 +35,7 @@ function Board(){
         
     }
 
-    function calculateWinner(square){
+    function calculateWinner(squares){
         const lines= [
             [0, 1, 2],
             [3, 4, 5],
@@ -39,9 +47,17 @@ function Board(){
             [2, 4, 6],
         ];
 
-        for( let i = 0 ; i < lines.length; i++ ){
+        for ( let i = 0 ; i < lines.length; i++ ) {
+
             const [a,b,c] = lines[i];
+
+            if( squares[a] && squares[a] === squares[b] && squares[a] === squares[c] ){
+                return squares[a];
+            }
+
         }
+        
+        return null;
 
     }
 
@@ -64,6 +80,8 @@ function Board(){
                 {rederSquare(7)}
                 {rederSquare(8)}
             </div>
+
+            {status}   
 
         </div>
     )
